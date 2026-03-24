@@ -28,7 +28,7 @@ class MatchPanel(ttk.Frame):
         pad = dict(padx=6, pady=2)
 
         # ── Match Test Section ───────────────────────────────────────
-        ttk.Label(self, text="Template Match Test", style="Header.TLabel").pack(anchor=tk.W, **pad, pady=(6, 4))
+        ttk.Label(self, text="Template Match Test", style="Header.TLabel").pack(anchor=tk.W, padx=6, pady=(6, 4))
 
         # Template selector
         sel_frame = ttk.Frame(self)
