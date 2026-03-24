@@ -15,4 +15,4 @@ pyinstaller lastwar.spec --noconfirm
 echo
 echo "[3/3] Done!"
 echo
-echo "Output: dist/LastWarAutomation/LastWarAutomation"
+echo "Output: dist/LastWarAutomation"
