@@ -20,7 +20,7 @@ class StatePanel(ttk.Frame):
     def _build_ui(self):
         pad = dict(padx=6, pady=2)
 
-        ttk.Label(self, text="Game State", style="Header.TLabel").pack(anchor=tk.W, **pad, pady=(6, 4))
+        ttk.Label(self, text="Game State", style="Header.TLabel").pack(anchor=tk.W, padx=6, pady=(6, 4))
 
         # State display
         self._state_frame = ttk.Frame(self)

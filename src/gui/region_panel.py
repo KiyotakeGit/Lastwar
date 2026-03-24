@@ -39,7 +39,7 @@ class RegionPanel(ttk.Frame):
 
         # Buttons
         btn_frame = ttk.Frame(self)
-        btn_frame.pack(fill=tk.X, **pad, pady=(4, 4))
+        btn_frame.pack(fill=tk.X, padx=6, pady=(4, 4))
         ttk.Button(btn_frame, text="Reload", command=self._load_coords).pack(side=tk.LEFT, padx=2)
         ttk.Button(btn_frame, text="Save", command=self._save_coords).pack(side=tk.LEFT, padx=2)
         ttk.Button(btn_frame, text="Add Region", command=self._add_region).pack(side=tk.LEFT, padx=2)
