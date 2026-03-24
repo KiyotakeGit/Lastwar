@@ -24,7 +24,7 @@ class RegionPanel(ttk.Frame):
     def _build_ui(self):
         pad = dict(padx=6, pady=2)
 
-        ttk.Label(self, text="Timer Regions", style="Header.TLabel").pack(anchor=tk.W, **pad, pady=(6, 4))
+        ttk.Label(self, text="Timer Regions", style="Header.TLabel").pack(anchor=tk.W, padx=6, pady=(6, 4))
 
         # Show overlay toggle
         self._show_var = tk.BooleanVar(value=False)
