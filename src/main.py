@@ -2,6 +2,7 @@
 
 import argparse
 import sys
+import threading
 from pathlib import Path
 
 import yaml
@@ -92,16 +93,8 @@ def main():
         help="Log file path (optional)",
     )
     parser.add_argument(
-        "--no-dashboard", action="store_true",
-        help="Disable the web dashboard",
-    )
-    parser.add_argument(
-        "--dashboard-port", type=int, default=5000,
-        help="Web dashboard port (default: 5000)",
-    )
-    parser.add_argument(
-        "--dashboard-only", action="store_true",
-        help="Only start the dashboard without running automation tasks",
+        "--no-gui", action="store_true",
+        help="Run in headless mode without GUI (terminal only)",
     )
     args = parser.parse_args()
 
@@ -123,8 +116,7 @@ def main():
     if not any(templates_dir.rglob("*.png")):
         logger.warning(
             "No template images found in %s. "
-            "You can capture templates from the dashboard. "
-            "Start with --dashboard-only to set up templates first.",
+            "Use the GUI to capture template screenshots from the game.",
             templates_dir,
         )
 
@@ -138,32 +130,26 @@ def main():
     tasks = create_tasks(config)
     poll_interval = config.get("screenshot_interval", 2.0)
 
-    # Start scheduler
+    # Create scheduler
     scheduler = Scheduler(
         device=device,
         tasks=tasks,
         poll_interval=poll_interval,
     )
 
-    # Start web dashboard
-    if not args.no_dashboard:
-        from src.web.app import init_dashboard, run_dashboard
-        init_dashboard(device, scheduler)
-        run_dashboard(port=args.dashboard_port)
-        logger.info("Dashboard: http://localhost:%d", args.dashboard_port)
+    if args.no_gui:
+        # Headless mode - run scheduler directly
+        logger.info("Running in headless mode. Press Ctrl+C to stop.")
+        scheduler.run()
+    else:
+        # GUI mode - run scheduler in background thread, GUI in main thread
+        from src.gui.app import App
 
-    if args.dashboard_only:
-        logger.info("Dashboard-only mode. Press Ctrl+C to stop.")
-        try:
-            import time
-            while True:
-                time.sleep(1)
-        except KeyboardInterrupt:
-            logger.info("Stopped.")
-        return
+        scheduler_thread = threading.Thread(target=scheduler.run, daemon=True)
+        scheduler_thread.start()
 
-    logger.info("Starting automation... Press Ctrl+C to stop.")
-    scheduler.run()
+        app = App(device, scheduler)
+        app.mainloop()
 
 
 if __name__ == "__main__":
