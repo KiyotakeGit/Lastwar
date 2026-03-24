@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last War Automation Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Last War Automation</h1>
+        <div id="status-bar">
+            <span id="connection-status" class="status-dot red"></span>
+            <span id="status-text">Connecting...</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Left: Screenshot & Interactive Canvas -->
+        <div class="panel panel-main">
+            <div class="panel-header">
+                <h2>Live Screenshot</h2>
+                <div class="toolbar">
+                    <button id="btn-refresh" onclick="refreshScreenshot()">Refresh</button>
+                    <label>
+                        Auto-refresh
+                        <input type="checkbox" id="auto-refresh" checked>
+                    </label>
+                    <span id="fps-counter">0 FPS</span>
+                </div>
+            </div>
+            <div class="canvas-container">
+                <canvas id="game-canvas"></canvas>
+                <div id="canvas-info">
+                    <span id="mouse-pos">X: 0, Y: 0</span>
+                    <span id="canvas-mode-label">Mode: View</span>
+                </div>
+            </div>
+            <div class="canvas-tools">
+                <button class="tool-btn active" data-mode="view" onclick="setCanvasMode('view')">View</button>
+                <button class="tool-btn" data-mode="pick" onclick="setCanvasMode('pick')">Pick Coords</button>
+                <button class="tool-btn" data-mode="region" onclick="setCanvasMode('region')">Select Region</button>
+                <button class="tool-btn" data-mode="capture" onclick="setCanvasMode('capture')">Capture Template</button>
+            </div>
+
+            <!-- Region Selection Result -->
+            <div id="selection-result" class="hidden">
+                <h3>Selection</h3>
+                <div class="selection-info">
+                    <span>X: <input type="number" id="sel-x" class="coord-input"></span>
+                    <span>Y: <input type="number" id="sel-y" class="coord-input"></span>
+                    <span>W: <input type="number" id="sel-w" class="coord-input"></span>
+                    <span>H: <input type="number" id="sel-h" class="coord-input"></span>
+                </div>
+                <div id="capture-form" class="hidden">
+                    <input type="text" id="tpl-name" placeholder="Template name">
+                    <select id="tpl-category">
+                        <option value="buttons">buttons</option>
+                        <option value="icons">icons</option>
+                        <option value="screens">screens</option>
+                    </select>
+                    <button onclick="captureTemplate()">Save Template</button>
+                </div>
+            </div>
+
+            <!-- Picked Coordinates -->
+            <div id="picked-coords" class="hidden">
+                <h3>Picked Coordinates</h3>
+                <div id="coords-list"></div>
+                <button onclick="clearCoords()">Clear</button>
+                <button onclick="copyCoords()">Copy</button>
+            </div>
+        </div>
+
+        <!-- Right: Controls -->
+        <div class="panel panel-side">
+            <!-- Template Matching Test -->
+            <div class="section">
+                <h2>Template Match Test</h2>
+                <div class="form-row">
+                    <select id="template-select">
+                        <option value="">-- Select Template --</option>
+                    </select>
+                    <button onclick="loadTemplates()">Reload</button>
+                </div>
+                <div class="form-row">
+                    <label>Threshold:
+                        <input type="range" id="match-threshold" min="0.3" max="1.0" step="0.05" value="0.80">
+                        <span id="threshold-value">0.80</span>
+                    </label>
+                </div>
+                <button onclick="testMatch()">Test Match</button>
+                <div id="match-results"></div>
+            </div>
+
+            <!-- Task Control -->
+            <div class="section">
+                <h2>Tasks</h2>
+                <div id="task-list"></div>
+            </div>
+
+            <!-- Game State -->
+            <div class="section">
+                <h2>Game State</h2>
+                <div id="game-state"></div>
+            </div>
+
+            <!-- Coordinate Regions -->
+            <div class="section">
+                <h2>Timer Regions</h2>
+                <div id="timer-regions"></div>
+                <button onclick="loadCoordinates()">Reload</button>
+                <button onclick="saveCoordinates()">Save</button>
+                <label>
+                    <input type="checkbox" id="show-regions" onchange="toggleRegionOverlay()">
+                    Show on Screenshot
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/dashboard.js"></script>
+</body>
+</html>

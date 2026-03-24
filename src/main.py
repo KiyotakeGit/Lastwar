@@ -91,6 +91,18 @@ def main():
         "--log-file", default=None,
         help="Log file path (optional)",
     )
+    parser.add_argument(
+        "--no-dashboard", action="store_true",
+        help="Disable the web dashboard",
+    )
+    parser.add_argument(
+        "--dashboard-port", type=int, default=5000,
+        help="Web dashboard port (default: 5000)",
+    )
+    parser.add_argument(
+        "--dashboard-only", action="store_true",
+        help="Only start the dashboard without running automation tasks",
+    )
     args = parser.parse_args()
 
     # Setup logging
@@ -111,8 +123,8 @@ def main():
     if not any(templates_dir.rglob("*.png")):
         logger.warning(
             "No template images found in %s. "
-            "You need to capture template screenshots for the bot to work. "
-            "See README for instructions.",
+            "You can capture templates from the dashboard. "
+            "Start with --dashboard-only to set up templates first.",
             templates_dir,
         )
 
@@ -132,6 +144,23 @@ def main():
         tasks=tasks,
         poll_interval=poll_interval,
     )
+
+    # Start web dashboard
+    if not args.no_dashboard:
+        from src.web.app import init_dashboard, run_dashboard
+        init_dashboard(device, scheduler)
+        run_dashboard(port=args.dashboard_port)
+        logger.info("Dashboard: http://localhost:%d", args.dashboard_port)
+
+    if args.dashboard_only:
+        logger.info("Dashboard-only mode. Press Ctrl+C to stop.")
+        try:
+            import time
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            logger.info("Stopped.")
+        return
 
     logger.info("Starting automation... Press Ctrl+C to stop.")
     scheduler.run()
