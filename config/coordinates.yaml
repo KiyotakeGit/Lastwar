@@ -1,0 +1,26 @@
+# Last War Automation - Screen Coordinates
+# ==========================================
+# All coordinates are in reference resolution (1280x720)
+# They will be automatically scaled to the actual screen resolution
+
+# Timer regions: [x, y, width, height]
+# Define the screen regions where in-game timers are displayed
+timers:
+  building_timer:
+    region: [580, 120, 120, 30]
+    action_template: "assets/templates/buttons/speed_up_btn.png"
+
+  research_timer:
+    region: [580, 160, 120, 30]
+    action_template: "assets/templates/buttons/speed_up_btn.png"
+
+  training_timer:
+    region: [580, 200, 120, 30]
+    action_template: "assets/templates/buttons/speed_up_btn.png"
+
+# Button positions (for reference, actual detection uses template matching)
+buttons:
+  world_map_btn: [640, 680]
+  city_view_btn: [540, 680]
+  back_btn: [50, 30]
+  rally_list_btn: [1200, 400]

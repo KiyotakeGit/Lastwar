@@ -1,0 +1,50 @@
+# Last War Automation - Settings
+# ================================
+
+# Platform: "pc" or "android"
+platform: "pc"
+
+# Android settings (used when platform is "android")
+android:
+  serial: "emulator-5554"    # ADB device serial, or null for auto-detect
+
+# PC settings (used when platform is "pc")
+pc:
+  window_title: "Last War"
+  # Game window region: [x, y, width, height]
+  # Set to null to capture entire primary monitor
+  game_region: null
+
+# Reference resolution for coordinate normalization
+reference_resolution: [1280, 720]
+
+# Screenshot polling interval in seconds
+screenshot_interval: 2.0
+
+# Template matching threshold (0-1, higher = stricter)
+match_threshold: 0.80
+
+# OCR language for Tesseract
+ocr_language: "eng"
+
+# Task configurations
+tasks:
+  auto_join_team:
+    enabled: true
+    priority: 1        # Lower = higher priority
+    cooldown: 30       # Seconds between runs
+
+  timer_monitor:
+    enabled: true
+    priority: 2
+    cooldown: 10
+
+  resource_collect:
+    enabled: true
+    priority: 3
+    cooldown: 300      # 5 minutes
+
+  daily_tasks:
+    enabled: true
+    priority: 4
+    cooldown: 86400    # 24 hours
