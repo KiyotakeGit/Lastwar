@@ -15,12 +15,14 @@ from src.tasks.daily_tasks import DailyTasksTask
 from src.tasks.resource_collect import ResourceCollectTask
 from src.tasks.timer_monitor import TimerMonitorTask
 from src.utils.logger import logger, setup_logger
+from src.utils.paths import resource_path
 
 
 def load_config(config_path: str = "config/settings.yaml") -> dict:
     """Load configuration from YAML file."""
     try:
-        with open(config_path, "r", encoding="utf-8") as f:
+        resolved = resource_path(config_path)
+        with open(resolved, "r", encoding="utf-8") as f:
             return yaml.safe_load(f) or {}
     except FileNotFoundError:
         logger.warning("Config file not found: %s, using defaults", config_path)

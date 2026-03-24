@@ -5,6 +5,7 @@ import numpy as np
 
 from src.device.base import DeviceController
 from src.utils.logger import logger
+from src.utils.paths import resource_path
 
 # Cache loaded template images
 _template_cache: dict[str, np.ndarray] = {}
@@ -13,7 +14,8 @@ _template_cache: dict[str, np.ndarray] = {}
 def _load_template(template_path: str) -> np.ndarray:
     """Load and cache a template image."""
     if template_path not in _template_cache:
-        tpl = cv2.imread(template_path, cv2.IMREAD_COLOR)
+        resolved = resource_path(template_path)
+        tpl = cv2.imread(resolved, cv2.IMREAD_COLOR)
         if tpl is None:
             raise FileNotFoundError(f"Template not found: {template_path}")
         _template_cache[template_path] = tpl
